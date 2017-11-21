@@ -6,7 +6,7 @@
 
         Dim d1 As New SBDevices.SBDeviceSecuritySensor(hs, 43)
 
-        Console.WriteLine("Goodbye")
+        Console.WriteLine("Goodbye!")
 
         Dim pause = Console.ReadLine()
     End Sub
