@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="IHSApplication.vb" />
     <Compile Include="SBDevices.vb" />
+    <Compile Include="SBHouse.vb" />
     <Compile Include="SBHS3.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -86,6 +87,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SkyView.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
