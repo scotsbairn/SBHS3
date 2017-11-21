@@ -3,8 +3,11 @@
     Sub Main()
         Dim hs As New IHSApplication
 
+        Dim sv As New SkyView(hs)
 
-        Dim d1 As New SBDevices.SBDeviceSecuritySensor(hs, 43)
+        Dim ss As Hashtable = sv.getSecuritySensors()
+
+        sv.DebugListSecurityAllDevices()
 
         Console.WriteLine("Goodbye!")
 

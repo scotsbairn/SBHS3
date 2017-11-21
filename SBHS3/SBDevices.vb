@@ -14,10 +14,10 @@ Public Class SBDevices
     '
     Public Class SBDeviceBase
         ' handle to hs application
-        Private hs As IHSApplication
+        Protected hs As IHSApplication
 
         ' device reference
-        Public Ref As Integer
+        Protected Ref As Integer
 
         ' device type
         Public Type As SBDeviceType
@@ -32,9 +32,29 @@ Public Class SBDevices
 #End If
         End Sub
 
+        Public Function getRef() As Integer
+            getRef = Ref
+        End Function
+
+        Public Function getAddress() As String
+            getAddress = "Me"
+        End Function
+
         Public Function getName() As String
             getName = "Me"
         End Function
+
+        Public Function getValue() As Double
+            getValue = 0
+        End Function
+
+        Public Function getValueAsString() As String
+            getValueAsString = ""
+        End Function
+
+        Public Sub setValue(ByRef Value)
+
+        End Sub
 
     End Class
 
@@ -82,17 +102,25 @@ Public Class SBDevices
     ' - setSecure(boolean secure)
     '
     ' Implements:
-    ' - isSecure()
     '   
     Public MustInherit Class SBDeviceSecurityControl
         Inherits SBSecurityDeviceBase
 
-        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer)
+        Private CanSecureSensor As SBDeviceSecuritySensor
+
+        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByRef _CanSecureSensor As SBDeviceSecuritySensor)
             MyBase.New(_hs, _Ref, SBDeviceType.SecurityControl)
+            CanSecureSensor = _CanSecureSensor
         End Sub
 
-        ' is the device secure or not?
+        '
+        ' set the mode for a security device:
+        ' - secure                      = true/falsels
+        ' - force                       = for setting of secure mode even if associatd sensor shows as not secure
+        ' - reportFailByNotification    = if we can't secure the device then notify of this
+        '
         Public MustOverride Sub setSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
+
     End Class
 
     '
@@ -105,20 +133,14 @@ Public Class SBDevices
     Public Class SBDeviceSecurityLock
         Inherits SBDeviceSecurityControl
 
-        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer)
-            MyBase.New(_hs, _Ref)
+        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByRef _CanSecureSensor As SBDeviceSecuritySensor)
+            MyBase.New(_hs, _Ref, _CanSecureSensor)
         End Sub
 
         Public Overrides Function isSecure() As Boolean
             isSecure = True
         End Function
 
-        '
-        ' set the mode for a security device:
-        ' - secure                      = true/falsels
-        ' - force                       = for setting of secure mode even if associatd sensor shows as not secure
-        ' - reportFailByNotification    = if we can't secure the device then notify of this
-        '
         Public Overrides Sub setSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
         End Sub
 
@@ -134,8 +156,8 @@ Public Class SBDevices
     Public Class SBDeviceSecurityBarrier
         Inherits SBDeviceSecurityControl
 
-        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer)
-            MyBase.New(_hs, _Ref)
+        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByRef _CanSecureSensor As SBDeviceSecuritySensor)
+            MyBase.New(_hs, _Ref, _CanSecureSensor)
         End Sub
 
         Public Overrides Function isSecure() As Boolean
@@ -143,6 +165,7 @@ Public Class SBDevices
         End Function
 
         Public Overrides Sub setSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
+
         End Sub
 
     End Class
