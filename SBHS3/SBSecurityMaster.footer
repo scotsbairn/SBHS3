@@ -1,0 +1,18 @@
+
+Sub Main(parm As Object)
+
+   hs.WriteLog("me", "you")
+
+   Dim sv As New SkyView(hs)
+   sv.DebugListSecuritySensors()
+
+End Sub
+
+
+Sub StatusChangeCB(ByVal Parm As Object())
+   hs.WriteLog("SBSecurityMaster", "hello")
+
+   Dim sv As New SkyView(hs)
+   sv.DebugListSecuritySensors()
+
+End Sub
