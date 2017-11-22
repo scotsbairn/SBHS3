@@ -57,15 +57,18 @@ Public Class SBDevices
 
         Public Function GetDeviceValue() As Double
 #If SBISHS3 Then
-            hs.bar()
+            Return hs.CAPIGetStatus(Ref).Value
 #Else
-
+            Return 0   
 #End If
-            Return 0
         End Function
 
         Public Function GetDeviceValueAsString() As String
-            Return ""
+#If SBISHS3 Then
+            Return hs.CAPIGetStatus(Ref).Status
+#Else
+            Return "0"
+#End If
         End Function
 
         Public Sub SetDeviceValue(ByRef Value)
