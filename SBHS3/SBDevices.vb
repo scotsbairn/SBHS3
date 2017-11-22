@@ -1,7 +1,4 @@
 ﻿
-'#Const SBNOHSDEV = 1
-
-
 Public Class SBDevices
 
     '
@@ -59,10 +56,10 @@ Public Class SBDevices
         End Function
 
         Public Function GetDeviceValue() As Double
-#If SBNOHSDEV Then
+#If SBISHS3 Then
             hs.bar()
 #Else
-            hs.foo()
+
 #End If
             Return 0
         End Function
