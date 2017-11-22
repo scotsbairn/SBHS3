@@ -7,11 +7,11 @@
 
     Public Overrides Sub InitSecurityDevices(ByRef SecuritySensors As Hashtable, ByRef SecurityControls As Hashtable)
 #If DEBUG Then
-        hs.writeLog(Me.GetType.Name, "InitSecurityDevies(...)")
+        hs.WriteLog(Me.GetType.Name, "InitSecurityDevies(...)")
 #End If
         ' add the sensors and control devices etc
-        addSecuritySensor(2)
-        addSecurityLock(10, 3)
+        AddSecuritySensor(2)
+        AddSecurityLock(10, 3)
 
 
     End Sub

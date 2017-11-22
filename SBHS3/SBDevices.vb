@@ -1,4 +1,7 @@
 ﻿
+'#Const SBNOHSDEV = 1
+
+
 Public Class SBDevices
 
     '
@@ -20,43 +23,55 @@ Public Class SBDevices
         Protected Ref As Integer
 
         ' device type
-        Public DeviceType As SBDeviceType
-
+        Protected DeviceType As SBDeviceType
 
         Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByVal _DeviceType As SBDeviceType)
             hs = _hs
             Ref = _Ref
             DeviceType = _DeviceType
 #If DEBUG Then
-            hs.writeLog(Me.GetType.Name, "created: Ref:" & Ref.ToString & " Type:" & DeviceType.ToString)
+            hs.WriteLog(Me.GetType.Name, "created: Ref:" & Ref.ToString & " Type:" & DeviceType.ToString)
 #End If
         End Sub
 
-        Public Function getRef() As Integer
+        ''' <summary>
+        ''' Get the Device Reference
+        ''' </summary>
+        ''' <returns>Device Reference</returns>
+        Public Function GetRef() As Integer
             Return Ref
         End Function
 
-        Public Function getDeviceType() As SBDeviceType
+        ''' <summary>
+        ''' Get the Device Type
+        ''' </summary>
+        ''' <returns>Device Type</returns>
+        Public Function GetDeviceType() As SBDeviceType
             Return DeviceType
         End Function
 
-        Public Function getAddress() As String
+        Public Function GetAddress() As String
             Return "Me"
         End Function
 
-        Public Function getName() As String
+        Public Function GetName() As String
             Return "Me"
         End Function
 
-        Public Function getValue() As Double
+        Public Function GetDeviceValue() As Double
+#If SBNOHSDEV Then
+            hs.bar()
+#Else
+            hs.foo()
+#End If
             Return 0
         End Function
 
-        Public Function getValueAsString() As String
+        Public Function GetDeviceValueAsString() As String
             Return ""
         End Function
 
-        Public Sub setValue(ByRef Value)
+        Public Sub SetDeviceValue(ByRef Value)
 
         End Sub
 
@@ -76,7 +91,7 @@ Public Class SBDevices
         End Sub
 
         ' is the device secure or not?
-        Public MustOverride Function isSecure() As Boolean
+        Public MustOverride Function IsSecure() As Boolean
 
     End Class
 
@@ -93,7 +108,7 @@ Public Class SBDevices
             MyBase.New(_hs, _Ref, SBDeviceType.SecuritySensor)
         End Sub
 
-        Public Overrides Function isSecure() As Boolean
+        Public Overrides Function IsSecure() As Boolean
             Return True
         End Function
 
@@ -123,7 +138,7 @@ Public Class SBDevices
         ' - force                       = for setting of secure mode even if associatd sensor shows as not secure
         ' - reportFailByNotification    = if we can't secure the device then notify of this
         '
-        Public MustOverride Sub setSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
+        Public MustOverride Sub SetSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
 
     End Class
 
@@ -141,11 +156,11 @@ Public Class SBDevices
             MyBase.New(_hs, _Ref, _CanSecureSensor)
         End Sub
 
-        Public Overrides Function isSecure() As Boolean
+        Public Overrides Function IsSecure() As Boolean
             Return True
         End Function
 
-        Public Overrides Sub setSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
+        Public Overrides Sub SetSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
         End Sub
 
     End Class
@@ -164,11 +179,11 @@ Public Class SBDevices
             MyBase.New(_hs, _Ref, _CanSecureSensor)
         End Sub
 
-        Public Overrides Function isSecure() As Boolean
+        Public Overrides Function IsSecure() As Boolean
             Return True
         End Function
 
-        Public Overrides Sub setSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
+        Public Overrides Sub SetSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
 
         End Sub
 
