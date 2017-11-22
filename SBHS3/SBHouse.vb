@@ -1,4 +1,5 @@
-﻿Imports System.Collections
+﻿
+'Imports System.Collections
 
 Public MustInherit Class SBHouse
 
@@ -79,6 +80,8 @@ Public MustInherit Class SBHouse
 
     Public Sub DebugListSecuritySensors()
         CheckSecurityIsReady()
+        Dim Item
+       
         For Each Item In SecuritySensors
             Dim dev As SBDevices.SBSecurityDeviceBase = Item.Value
             hs.writeLog(Me.GetType.Name, "SecurityDevice: Ref:" & dev.getRef() & " Name: " & dev.getName())

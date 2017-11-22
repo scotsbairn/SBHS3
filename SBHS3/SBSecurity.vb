@@ -12,6 +12,7 @@ Public Class SBSecurity
     Public Function isHouseSecure() As Boolean
         Dim Sensors As Hashtable = House.getSecuritySensors
 
+	Dim Item
         For Each Item In Sensors
             Dim dev As SBDevices.SBSecurityDeviceBase = Item.Value
             If Not dev.isSecure Then
