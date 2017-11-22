@@ -1,4 +1,5 @@
 ﻿Module Module1
+#Const SBNOHSDEV = 1
 
     Sub Main()
         Dim hs As New IHSApplication
