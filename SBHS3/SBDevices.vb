@@ -20,36 +20,40 @@ Public Class SBDevices
         Protected Ref As Integer
 
         ' device type
-        Public Type As SBDeviceType
+        Public DeviceType As SBDeviceType
 
 
-        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByVal _Type As SBDeviceType)
+        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByVal _DeviceType As SBDeviceType)
             hs = _hs
             Ref = _Ref
-            Type = _Type
+            DeviceType = _DeviceType
 #If DEBUG Then
-            hs.writeLog(Me.GetType.Name, "created: Ref:" & Ref.ToString & " Type:" & Type.ToString)
+            hs.writeLog(Me.GetType.Name, "created: Ref:" & Ref.ToString & " Type:" & DeviceType.ToString)
 #End If
         End Sub
 
         Public Function getRef() As Integer
-            getRef = Ref
+            Return Ref
+        End Function
+
+        Public Function getDeviceType() As SBDeviceType
+            Return DeviceType
         End Function
 
         Public Function getAddress() As String
-            getAddress = "Me"
+            Return "Me"
         End Function
 
         Public Function getName() As String
-            getName = "Me"
+            Return "Me"
         End Function
 
         Public Function getValue() As Double
-            getValue = 0
+            Return 0
         End Function
 
         Public Function getValueAsString() As String
-            getValueAsString = ""
+            Return ""
         End Function
 
         Public Sub setValue(ByRef Value)
@@ -67,8 +71,8 @@ Public Class SBDevices
     Public MustInherit Class SBSecurityDeviceBase
         Inherits SBDeviceBase
 
-        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByVal _Type As SBDeviceType)
-            MyBase.New(_hs, _Ref, _Type)
+        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByVal _DeviceType As SBDeviceType)
+            MyBase.New(_hs, _Ref, _DeviceType)
         End Sub
 
         ' is the device secure or not?
@@ -90,7 +94,7 @@ Public Class SBDevices
         End Sub
 
         Public Overrides Function isSecure() As Boolean
-            isSecure = True
+            Return True
         End Function
 
     End Class
@@ -138,7 +142,7 @@ Public Class SBDevices
         End Sub
 
         Public Overrides Function isSecure() As Boolean
-            isSecure = True
+            Return True
         End Function
 
         Public Overrides Sub setSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
@@ -161,7 +165,7 @@ Public Class SBDevices
         End Sub
 
         Public Overrides Function isSecure() As Boolean
-            isSecure = True
+            Return True
         End Function
 
         Public Overrides Sub setSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)

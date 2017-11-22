@@ -5,8 +5,6 @@ Public MustInherit Class SBHouse
     ' handle to hs application
     Protected hs As IHSApplication
 
-    Public Shared SecurityDevices As Hashtable
-
     Public Shared SecuritySensors As Hashtable
 
     Private Shared SecurityControls As Hashtable
@@ -14,44 +12,40 @@ Public MustInherit Class SBHouse
     Public Sub New(ByRef _hs As IHSApplication)
         hs = _hs
 
-        SecurityDevices = New Hashtable
     End Sub
 
     Protected Sub addSecuritySensor(ByVal Ref As Integer)
         Dim sDev = New SBDevices.SBDeviceSecuritySensor(hs, Ref)
-        SecurityDevices.Add(Ref, sDev)
         SecuritySensors.Add(Ref, sDev)
     End Sub
 
     Protected Sub addSecurityLock(ByVal Ref As Integer)
         Dim cDev = New SBDevices.SBDeviceSecurityLock(hs, Ref, Nothing)
-        SecurityDevices.Add(Ref, cDev)
+        SecuritySensors.Add(Ref, cDev)
         SecurityControls.Add(Ref, cDev)
     End Sub
 
     Protected Sub addSecurityBarrier(ByVal Ref As Integer)
         Dim cDev = New SBDevices.SBDeviceSecurityBarrier(hs, Ref, Nothing)
-        SecurityDevices.Add(Ref, cDev)
+        SecuritySensors.Add(Ref, cDev)
         SecurityControls.Add(Ref, cDev)
     End Sub
 
     Protected Sub addSecurityLock(ByVal Ref As Integer, ByVal SensorRef As Integer)
         Dim sDev As SBDevices.SBDeviceSecuritySensor = New SBDevices.SBDeviceSecuritySensor(hs, SensorRef)
-        SecurityDevices.Add(SensorRef, sDev)
         SecuritySensors.Add(SensorRef, sDev)
 
         Dim cDev = New SBDevices.SBDeviceSecurityLock(hs, Ref, Nothing)
-        SecurityDevices.Add(Ref, cDev)
+        SecuritySensors.Add(Ref, cDev)
         SecurityControls.Add(Ref, cDev)
     End Sub
 
     Protected Sub addSecurityBarrier(ByVal Ref As Integer, ByVal SensorRef As Integer)
         Dim sDev As SBDevices.SBDeviceSecuritySensor = New SBDevices.SBDeviceSecuritySensor(hs, SensorRef)
-        SecurityDevices.Add(SensorRef, sDev)
         SecuritySensors.Add(SensorRef, sDev)
 
         Dim cDev = New SBDevices.SBDeviceSecurityBarrier(hs, Ref, sDev)
-        SecurityDevices.Add(Ref, cDev)
+        SecuritySensors.Add(Ref, cDev)
         SecurityControls.Add(Ref, cDev)
     End Sub
 
@@ -69,7 +63,7 @@ Public MustInherit Class SBHouse
     Public Function getSecuritySensors() As Hashtable
         CheckSecurityIsReady()
 
-        getSecuritySensors = SecuritySensors
+        Return SecuritySensors
     End Function
 
     '
@@ -78,14 +72,14 @@ Public MustInherit Class SBHouse
     Public Function getSecurityControls() As Hashtable
         CheckSecurityIsReady()
 
-        getSecurityControls = SecurityControls
+        Return SecurityControls
     End Function
 
     Public MustOverride Sub InitSecurityDevices(ByRef SecuritySensors As Hashtable, ByRef SecurityControls As Hashtable)
 
-    Public Sub DebugListSecurityAllDevices()
+    Public Sub DebugListSecuritySensors()
         CheckSecurityIsReady()
-        For Each Item In SecurityDevices
+        For Each Item In SecuritySensors
             Dim dev As SBDevices.SBSecurityDeviceBase = Item.Value
             hs.writeLog(Me.GetType.Name, "SecurityDevice: Ref:" & dev.getRef() & " Name: " & dev.getName())
         Next

@@ -5,9 +5,8 @@
 
         Dim sv As New SkyView(hs)
 
-        Dim ss As Hashtable = sv.getSecuritySensors()
 
-        sv.DebugListSecurityAllDevices()
+        sv.DebugListSecuritySensors()
 
         Console.WriteLine("Goodbye!")
 
