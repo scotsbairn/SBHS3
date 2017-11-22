@@ -5,14 +5,20 @@
         MyBase.New(_hs)
     End Sub
 
-    Public Overrides Sub InitSecurityDevices(ByRef SecuritySensors As Hashtable, ByRef SecurityControls As Hashtable)
+    Public Overrides Sub InitSecurityDevices()
 #If DEBUG Then
         hs.WriteLog(Me.GetType.Name, "InitSecurityDevies(...)")
 #End If
         ' add the sensors and control devices etc
-        AddSecuritySensor(2)
-        AddSecurityLock(10, 3)
 
+
+        AddSecurityLock(57, 95)         ' Upper Door lock and Sensor
+        AddSecuritySensor(156)          ' Family Room Door
+        AddSecuritySensor(152)          ' Dining Room Door
+        AddSecuritySensor(123)          ' Main TV Room Door
+
+        AddSecuritySceneController(253) ' Family Button 5
+        AddSecuritySceneController(267) ' Hall Button 5
 
     End Sub
 

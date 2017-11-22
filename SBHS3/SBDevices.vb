@@ -7,6 +7,7 @@ Public Class SBDevices
     Enum SBDeviceType
         SecurityControl
         SecuritySensor
+        SceneController
     End Enum
 
     '
@@ -27,7 +28,7 @@ Public Class SBDevices
             Ref = _Ref
             DeviceType = _DeviceType
 #If DEBUG Then
-            hs.WriteLog(Me.GetType.Name, "created: Ref:" & Ref.ToString & " Type:" & DeviceType.ToString)
+            hs.WriteLog("SBDevice", "created: Ref:" & Ref.ToString & " Type:" & DeviceType.ToString)
 #End If
         End Sub
 
@@ -52,22 +53,27 @@ Public Class SBDevices
         End Function
 
         Public Function GetName() As String
-            Return "Me"
+            Dim dc = hs.GetDeviceByRef(Ref)
+            Return dc.Name(hs)
         End Function
 
         Public Function GetDeviceValue() As Double
-#If SBISHS3 Then
-            Return hs.CAPIGetStatus(Ref).Value
-#Else
-            Return 0   
-#End If
+	   #If SBISHS3 Then
+	      Dim rv As String = hs.CAPIGetStatus(Ref).Value
+	      #If SBHS3DEBUG
+	          hs.WriteLog("SBDevice", "GetDeviceValue: Ref: " & Ref.toString & " Value: " & rv)
+		  Return rv
+	      #End If
+	   #Else
+	      Return 0   
+	   #End If
         End Function
 
         Public Function GetDeviceValueAsString() As String
 #If SBISHS3 Then
             Dim DeviceValue As String = hs.CAPIGetStatus(Ref).Status
 #If SBHS3DEBUG Then
-            hs.WriteLog(Me.GetType.Name, "GetDeviceValueAsString from Ref:" & Ref.ToString & " Value: " & DeviceValue)
+            hs.WriteLog("SBDevice", "GetDeviceValueAsString from Ref:" & Ref.ToString & " Value: " & DeviceValue)
 #End If
             Return DeviceValue
 #Else
@@ -82,6 +88,25 @@ Public Class SBDevices
         End Sub
 
     End Class
+
+
+    Public Class SBSceneController
+        Inherits SBDeviceBase
+
+        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer)
+            MyBase.New(_hs, _Ref, SBDeviceType.SceneController)
+        End Sub
+
+        Public Sub SetSceneActive(ByVal Active As Boolean)
+            If Active Then
+                SetDeviceValue("Scene On")
+            Else
+                SetDeviceValue("Scene Off")
+            End If
+        End Sub
+
+    End Class
+
 
     '
     ' An abstract security device
@@ -115,7 +140,8 @@ Public Class SBDevices
         End Sub
 
         Public Overrides Function IsSecure() As Boolean
-            Return True
+            Dim Value As String = GetDeviceValueAsString()
+            Return Value.Contains("Close")
         End Function
 
     End Class
@@ -163,7 +189,8 @@ Public Class SBDevices
         End Sub
 
         Public Overrides Function IsSecure() As Boolean
-            Return True
+            Dim Value As String = GetDeviceValueAsString()
+            Return Value.Contains("Locked")
         End Function
 
         Public Overrides Sub SetSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
@@ -186,7 +213,8 @@ Public Class SBDevices
         End Sub
 
         Public Overrides Function IsSecure() As Boolean
-            Return True
+            Dim Value As String = GetDeviceValueAsString()
+            Return Value.Contains("Closed")
         End Function
 
         Public Overrides Sub SetSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)

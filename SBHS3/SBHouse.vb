@@ -6,13 +6,20 @@ Public MustInherit Class SBHouse
     ' handle to hs application
     Protected hs As IHSApplication
 
-    Public Shared SecuritySensors As Hashtable
+    Private Shared SecuritySensors As Hashtable
 
     Private Shared SecurityControls As Hashtable
+
+    Private Shared SecuritySceneControllers As Hashtable
 
     Public Sub New(ByRef _hs As IHSApplication)
         hs = _hs
 
+    End Sub
+
+    Protected Sub AddSecuritySceneController(ByVal Ref As Integer)
+        Dim sDev = New SBDevices.SBSceneController(hs, Ref)
+        SecuritySceneControllers.Add(Ref, sDev)
     End Sub
 
     Protected Sub AddSecuritySensor(ByVal Ref As Integer)
@@ -54,10 +61,17 @@ Public MustInherit Class SBHouse
         If IsNothing(SecuritySensors) Then
             SecuritySensors = New Hashtable
             SecurityControls = New Hashtable
+            SecuritySceneControllers = New Hashtable
 
-            InitSecurityDevices(SecuritySensors, SecurityControls)
+            InitSecurityDevices()
         End If
     End Sub
+
+    Public Function getHS() As IHSApplication
+        Return hs
+    End Function
+
+    
     '
     ' get the set of security sensor devices
     '
@@ -76,7 +90,28 @@ Public MustInherit Class SBHouse
         Return SecurityControls
     End Function
 
-    Public MustOverride Sub InitSecurityDevices(ByRef SecuritySensors As Hashtable, ByRef SecurityControls As Hashtable)
+    '
+    ' get the set of security scene control devices
+    '
+    Public Function GetSecuritySceneControls() As Hashtable
+        CheckSecurityIsReady()
+
+        Return SecuritySceneControllers
+
+    End Function
+
+    ''' <summary>
+    ''' Lookup a device by its Ref ID to see if it is a security sensor
+    ''' </summary>
+    ''' <param name="Ref">Ref ID of device to lookup</param>
+    ''' <returns>True if Ref refers to a security sensor</returns>
+    Public Function IsSecuritySensor(ByRef Ref As Integer)
+        CheckSecurityIsReady()
+
+        Return SecuritySensors.ContainsKey(Ref)
+    End Function
+
+    Public MustOverride Sub InitSecurityDevices()
 
     Public Sub DebugListSecuritySensors()
         CheckSecurityIsReady()
