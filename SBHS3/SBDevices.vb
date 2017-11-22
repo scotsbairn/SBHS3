@@ -65,14 +65,20 @@ Public Class SBDevices
 
         Public Function GetDeviceValueAsString() As String
 #If SBISHS3 Then
-            Return hs.CAPIGetStatus(Ref).Status
+            Dim DeviceValue As String = hs.CAPIGetStatus(Ref).Status
+#If SBHS3DEBUG Then
+            hs.WriteLog(Me.GetType.Name, "GetDeviceValueAsString from Ref:" & Ref.ToString & " Value: " & DeviceValue)
+#End If
+            Return DeviceValue
 #Else
             Return "0"
 #End If
         End Function
 
-        Public Sub SetDeviceValue(ByRef Value)
-
+       Public Sub SetDeviceValue(ByRef Value As String)
+#If SBISHS3 Then
+            hs.CAPIControlHandler(hs.CAPIGetSingleControl(Ref,True,Value,False,False))
+#End IF
         End Sub
 
     End Class

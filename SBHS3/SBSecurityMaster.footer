@@ -3,8 +3,14 @@ Sub Main(parm As Object)
 
    hs.WriteLog("me", "you")
 
+#If SBHS3DEBUG
+   hs.WriteLog("me", "and you")
+#End If
+
    Dim sv As New SkyView(hs)
    sv.DebugListSecuritySensors()
+   Dim ss As New SBSecurity(sv)
+   
 
 End Sub
 
@@ -14,5 +20,9 @@ Sub StatusChangeCB(ByVal Parm As Object())
 
    Dim sv As New SkyView(hs)
    sv.DebugListSecuritySensors()
+
+#If SBHS3DEBUG
+   hs.WriteLog("me", "and you")
+#End If
 
 End Sub
