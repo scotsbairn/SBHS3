@@ -13,6 +13,16 @@ Public Class SBSecurity
         House = _House
     End Sub
 
+
+    ''' <summary>
+    ''' Lookup a device by its Ref ID to see if it is a security sensor
+    ''' </summary>
+    ''' <param name="Ref">Ref ID of device to lookup</param>
+    ''' <returns>True if Ref refers to a security sensor</returns>
+    Public Function IsSecuritySensor(ByRef Ref As Integer)
+        Return House.IsSecuritySensor(Ref)
+    End Function
+
     ''' <summary>
     ''' Is the house Secure, i.e. all security sensors report isSecure
     ''' </summary>
@@ -34,6 +44,9 @@ Public Class SBSecurity
         Return True
     End Function
 
+    ''' <summary>
+    ''' Update the scene controllers to reflect the current status of the house
+    ''' </summary>
     Public Sub UpdateSecuritySceneControllers()
         Dim IsSecure As Boolean = IsHouseSecure()
         Dim Controllers As Hashtable = House.GetSecuritySceneControls
@@ -43,7 +56,20 @@ Public Class SBSecurity
             Dim dev As SBDevices.SBSceneController = Item.Value
             dev.SetSceneActive(IsSecure)
         Next
-
-
     End Sub
+
+
+    Public Sub SetSecure(ByVal Ref As Integer, ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
+        If House.GetSecurityControls().ContainsKey(Ref) Then
+            Dim lDev As SBDevices.SBDeviceSecurityControl = House.GetSecurityControls().Item(Ref)
+            lDev.SetSecure(secure, force, reportFailByNotification)
+        Else
+            If reportFailByNotification Then
+                SBNotify.SendErrorMsg("SetSecure request for device Ref:" & Ref.ToString & ", failed to find device")
+            Else
+                Throw New System.Exception("Failed to find device by Ref:" & Ref.ToString)
+            End If
+        End If
+    End Sub
+
 End Class

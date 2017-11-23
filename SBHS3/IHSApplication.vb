@@ -7,4 +7,7 @@ Public Class IHSApplication
         Console.WriteLine(m1 & " : " & m2)
     End Sub
 
+    Friend Sub RunScriptFunc(v1 As String, v2 As String, msg As String, v3 As Boolean, v4 As Boolean)
+        Throw New NotImplementedException()
+    End Sub
 End Class
