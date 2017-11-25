@@ -41,8 +41,14 @@ Public Class SkyViewNotify
         SetSingleton(Me)
     End Sub
 
-    Protected Overrides Sub _SendErrorMsg(ByVal Msg As String)
-        hs.RunScriptFunc("Notify.vb", "PushoverSendError", Msg, True, False)
+    Protected Overrides Sub _SendInfoMsg(ByVal Subject As String, ByVal Msg As String)
+        Dim notifyParameters As String = "" & Subject & "|" & Msg
+        hs.RunScriptFunc("Notify.vb", "PushoverSendInfo", notifyParameters, True, False)
+    End Sub
+
+    Protected Overrides Sub _SendErrorMsg(ByVal Subject As String, ByVal Msg As String)
+        Dim notifyParameters As String = "" & Subject & "|" & Msg
+        hs.RunScriptFunc("Notify.vb", "PushoverSendError", notifyParameters, True, False)
     End Sub
 
 End Class

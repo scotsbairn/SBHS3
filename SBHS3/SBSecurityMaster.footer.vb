@@ -11,6 +11,22 @@ Sub Main(parm As Object)
 End Sub
 
 
+Sub LockAllDoors(ByVal Parm As Object)
+    SkyviewSingleton.Init(hs)
+    Dim Security As SBSecurity = SBSingleton.GetSecurity()
+
+    Security.SecureAll(True, False, True)
+    Security.UpdateSecuritySceneControllers()
+End Sub
+
+Sub UpdateSecuritySceneControllers(ByVal Parm As Object)
+    SkyviewSingleton.Init(hs)
+    Dim Security As SBSecurity = SBSingleton.GetSecurity()
+
+    Security.UpdateSecuritySceneControllers()
+End Sub
+
+
 Sub StatusChangeCB(ByVal Parm As Object())
     SkyviewSingleton.Init(hs)
 
@@ -19,7 +35,7 @@ Sub StatusChangeCB(ByVal Parm As Object())
 
     Dim Ref As Integer = Parm(4)
 
-#If SBHS3DEBUG > 5 Then
+#If SBHS3DEBUG > 10 Then
             hs.WriteLog("SBSecurityMaster", "Event Trigger, Ref:" & Ref)
 #End If
 

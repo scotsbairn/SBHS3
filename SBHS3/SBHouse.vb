@@ -43,7 +43,7 @@ Public MustInherit Class SBHouse
         Dim sDev As SBDevices.SBDeviceSecuritySensor = New SBDevices.SBDeviceSecuritySensor(hs, SensorRef)
         SecuritySensors.Add(SensorRef, sDev)
 
-        Dim cDev = New SBDevices.SBDeviceSecurityLock(hs, Ref, Nothing)
+        Dim cDev = New SBDevices.SBDeviceSecurityLock(hs, Ref, sDev)
         SecuritySensors.Add(Ref, cDev)
         SecurityControls.Add(Ref, cDev)
     End Sub
@@ -116,7 +116,7 @@ Public MustInherit Class SBHouse
     Public Sub DebugListSecuritySensors()
         CheckSecurityIsReady()
         Dim Item
-       
+
         For Each Item In SecuritySensors
             Dim dev As SBDevices.SBSecurityDeviceBase = Item.Value
             hs.WriteLog(Me.GetType.Name, "SecurityDevice: Ref:" & dev.GetRef() & " Name: " & dev.GetName())

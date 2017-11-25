@@ -96,6 +96,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SBSingleton.vb" />
     <Compile Include="IHSApplication.vb" />
     <Compile Include="SBDevices.vb" />
     <Compile Include="SBHouse.vb" />
@@ -115,6 +116,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SBNotify.vb" />
     <Compile Include="SBSecurity.vb" />
     <Compile Include="SkyView.vb" />
   </ItemGroup>

@@ -58,15 +58,15 @@ Public Class SBDevices
         End Function
 
         Public Function GetDeviceValue() As Double
-	   #If SBISHS3 Then
+#If SBISHS3 Then
 	      Dim rv As String = hs.CAPIGetStatus(Ref).Value
 	      #If SBHS3DEBUG
 	          hs.WriteLog("SBDevice", "GetDeviceValue: Ref: " & Ref.toString & " Value: " & rv)
 		  Return rv
 	      #End If
-	   #Else
-	      Return 0   
-	   #End If
+#Else
+            Return 0
+#End If
         End Function
 
         Public Function GetDeviceValueAsString() As String
@@ -81,10 +81,13 @@ Public Class SBDevices
 #End If
         End Function
 
-       Public Sub SetDeviceValue(ByRef Value As String)
+        Public Sub SetDeviceValue(ByRef Value As String)
+#If SBHS3DEBUG Then
+            hs.WriteLog("SBDevice", "SetDeviceValueAsString for Ref:" & Ref.ToString & " Value: " & Value)
+#End If
 #If SBISHS3 Then
             hs.CAPIControlHandler(hs.CAPIGetSingleControl(Ref,True,Value,False,False))
-#End IF
+#End If
         End Sub
 
     End Class
@@ -141,7 +144,12 @@ Public Class SBDevices
 
         Public Overrides Function IsSecure() As Boolean
             Dim Value As String = GetDeviceValueAsString()
-            Return Value.Contains("Close")
+            Dim Secure As Boolean = Value.Contains("Close")
+#If SBHS3DEBUG > 5 Then
+            hs.WriteLog("SBDevice", "IsSecure Ref: " & Ref & " Secure: " & Secure) 
+#End If
+
+            Return Secure
         End Function
 
     End Class
@@ -157,7 +165,7 @@ Public Class SBDevices
     Public MustInherit Class SBDeviceSecurityControl
         Inherits SBSecurityDeviceBase
 
-        Private CanSecureSensor As SBDeviceSecuritySensor
+        Protected CanSecureSensor As SBDeviceSecuritySensor
 
         Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByRef _CanSecureSensor As SBDeviceSecuritySensor)
             MyBase.New(_hs, _Ref, SBDeviceType.SecurityControl)
@@ -190,10 +198,39 @@ Public Class SBDevices
 
         Public Overrides Function IsSecure() As Boolean
             Dim Value As String = GetDeviceValueAsString()
-            Return Value.Contains("Locked")
+            Dim Secure As Boolean = Value.Contains("Locked")
+
+#If SBHS3DEBUG > 5 Then
+            hs.WriteLog("SBDevice", "IsSecure Ref: " & Ref & " Secure: " & Secure) 
+#End If
+            Return Secure
         End Function
 
         Public Overrides Sub SetSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
+            If secure Then
+                If Not IsSecure() Then
+                    Dim doIt As Boolean = True
+
+#If SBHS3DEBUG > 5 Then
+                    hs.WriteLog("SBDevice", "Can we lock the door? Force: " & force & " sensor defined: " & Not IsNothing(CanSecureSensor)) 
+#End If
+
+                    If Not force And Not IsNothing(CanSecureSensor) Then
+                        doIt = CanSecureSensor.IsSecure
+                    End If
+                    If doIt Then
+                        SetDeviceValue("Lock")
+                    Else
+                        If reportFailByNotification Then
+                            SBSingleton.GetNotify().SendInfoMsg("Cannot lock: " & GetName(), "Sensor associated sensor with " & GetName() & " not in secure state")
+                        End If
+                    End If
+                End If
+            Else
+                If IsSecure() Then
+                    SetDeviceValue("Unlock")
+                End If
+            End If
         End Sub
 
     End Class
@@ -218,7 +255,30 @@ Public Class SBDevices
         End Function
 
         Public Overrides Sub SetSecure(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
+            If secure Then
+                If Not IsSecure() Then
+                    Dim doIt As Boolean = True
 
+#If SBHS3DEBUG > 5 Then
+                    hs.WriteLog("SBDevice", "Can we lock the door? Force: " & force & " sensor defined: " & Not IsNothing(CanSecureSensor)) 
+#End If
+
+                    If Not force And Not IsNothing(CanSecureSensor) Then
+                        doIt = CanSecureSensor.IsSecure
+                    End If
+                    If doIt Then
+                        SetDeviceValue("Close")
+                    Else
+                        If reportFailByNotification Then
+                            SBSingleton.GetNotify().SendInfoMsg("Cannot lock: " & GetName(), "Sensor associated sensor with " & GetName() & " not in secure state")
+                        End If
+                    End If
+                End If
+            Else
+                If IsSecure() Then
+                    SetDeviceValue("Open")
+                End If
+            End If
         End Sub
 
     End Class

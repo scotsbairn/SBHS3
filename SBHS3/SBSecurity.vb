@@ -65,11 +65,20 @@ Public Class SBSecurity
             lDev.SetSecure(secure, force, reportFailByNotification)
         Else
             If reportFailByNotification Then
-                SBNotify.SendErrorMsg("SetSecure request for device Ref:" & Ref.ToString & ", failed to find device")
+                SBNotify.SendErrorMsg("ERROR: SetSecure", "SetSecure request for device Ref:" & Ref.ToString & ", failed to find device")
             Else
                 Throw New System.Exception("Failed to find device by Ref:" & Ref.ToString)
             End If
         End If
     End Sub
 
+    Public Sub SecureAll(ByVal secure As Boolean, ByVal force As Boolean, ByVal reportFailByNotification As Boolean)
+        Dim Controls As Hashtable = House.GetSecurityControls
+        Dim Item
+
+        For Each Item In Controls
+            Dim dev As SBDevices.SBDeviceSecurityControl = Item.value
+            dev.SetSecure(secure, force, reportFailByNotification)
+        Next
+    End Sub
 End Class
