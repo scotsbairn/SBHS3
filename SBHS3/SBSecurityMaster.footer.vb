@@ -1,4 +1,5 @@
 
+
 Sub Main(parm As Object)
     SkyviewSingleton.Init(hs)
 
@@ -42,9 +43,6 @@ Sub StatusChangeCB(ByVal Parm As Object())
     Dim Security As SBSecurity = SBSingleton.GetSecurity()
 
     If (Security.IsSecuritySensor(Ref)) Then
-#If SBHS3DEBUG Then
-                hs.WriteLog("SBSecurityMaster", "Event is for a security sensor, Ref:" & Ref)
-#End If
         Security.UpdateSecuritySceneControllers()
     End If
 

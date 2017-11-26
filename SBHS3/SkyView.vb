@@ -1,4 +1,6 @@
-﻿Public Class SkyView
+﻿
+
+Public Class SkyView
     Inherits SBHouse
 
     Public Sub New(ByRef _hs As IHSApplication)

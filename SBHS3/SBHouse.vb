@@ -1,4 +1,5 @@
 ﻿
+
 'Imports System.Collections
 
 Public MustInherit Class SBHouse
@@ -18,7 +19,7 @@ Public MustInherit Class SBHouse
     End Sub
 
     Protected Sub AddSecuritySceneController(ByVal Ref As Integer)
-        Dim sDev = New SBDevices.SBSceneController(hs, Ref)
+        Dim sDev = New SBDevices.SBDeviceSceneController(hs, Ref)
         SecuritySceneControllers.Add(Ref, sDev)
     End Sub
 
@@ -71,7 +72,7 @@ Public MustInherit Class SBHouse
         Return hs
     End Function
 
-    
+
     '
     ' get the set of security sensor devices
     '
@@ -118,7 +119,7 @@ Public MustInherit Class SBHouse
         Dim Item
 
         For Each Item In SecuritySensors
-            Dim dev As SBDevices.SBSecurityDeviceBase = Item.Value
+            Dim dev As SBDevices.SBDeviceSecurityBase = Item.Value
             hs.WriteLog(Me.GetType.Name, "SecurityDevice: Ref:" & dev.GetRef() & " Name: " & dev.GetName())
         Next
     End Sub

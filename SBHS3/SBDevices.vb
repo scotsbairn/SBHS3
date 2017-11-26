@@ -5,6 +5,9 @@ Public Class SBDevices
     ' Device Type, used to categorize devices
     '
     Enum SBDeviceType
+        SwitchBinary
+        SwitchDimmable
+
         SecurityControl
         SecuritySensor
         SceneController
@@ -49,7 +52,8 @@ Public Class SBDevices
         End Function
 
         Public Function GetAddress() As String
-            Return "Me"
+            Dim dc = hs.GetDeviceByRef(Ref)
+            Return dc.Address(hs)
         End Function
 
         Public Function GetName() As String
@@ -90,10 +94,101 @@ Public Class SBDevices
 #End If
         End Sub
 
+        ''' <summary>
+        ''' Lookup a device by its reference to see if it's a valid device
+        ''' </summary>
+        ''' <param name="hs">handle to HomeSeer</param>
+        ''' <param name="dRef">device reference to lookup</param>
+        ''' <returns></returns>
+        Public Shared Function DeviceRefValid(ByRef hs As IHSApplication, ByRef dRef As Integer) As Boolean
+            Return Not IsNothing(hs.GetDeviceByRef(dRef))
+        End Function
+
+    End Class
+
+    Public MustInherit Class SBDeviceSwitchBase
+        Inherits SBDeviceBase
+
+        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByVal _DeviceType As SBDeviceType)
+            MyBase.New(_hs, _Ref, _DeviceType)
+        End Sub
+
+        Public MustOverride Sub turnOn()
+
+        Public MustOverride Sub turnOff()
+
+        Public MustOverride Function IsOn() As Boolean
+
+    End Class
+
+    Public Class SBDeviceSwitchBinary
+        Inherits SBDeviceSwitchBase
+
+        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer)
+            MyBase.New(_hs, _Ref, SBDeviceType.SwitchBinary)
+        End Sub
+
+        Public Overrides Sub turnOn()
+            SetDeviceValue("On")
+        End Sub
+
+        Public Overrides Sub turnOff()
+            SetDeviceValue("Off")
+        End Sub
+
+        Public Overrides Function IsOn() As Boolean
+            Return GetDeviceValueAsString().Contains("On")
+        End Function
+    End Class
+
+    Public Class SBDeviceSwitchDimmable
+        Inherits SBDeviceSwitchBase
+
+        Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer)
+            MyBase.New(_hs, _Ref, SBDeviceType.SwitchBinary)
+        End Sub
+
+        Public Overrides Sub TurnOn()
+            SetDeviceValue("On")
+        End Sub
+
+        Public Overrides Sub TurnOff()
+            SetDeviceValue("Off")
+        End Sub
+
+        Public Sub DimTo(ByRef DimValue As Double)
+
+#If SBHS3DEBUG > 5 Then
+    hs.WriteLog(Me.GetType.Name, "DimTo Ref:" & Ref & " Dim:" & DimValue)
+#End If
+            Dim objCAPIControl = hs.CAPIGetSingleControlByUse(Ref, ePairControlUse._Dim)
+
+            If IsNothing(objCAPIControl) Then
+#If SBHS3DEBUG Then
+                hs.WriteLog(Me.GetType.Name, "Failed to obtain CAPIControl object for device Ref:" & Ref)
+#End If
+                Throw New System.Exception("Failed to obtain CAPIControl object for device Ref:" & Ref)
+            Else
+                objCAPIControl.ControlValue = DimValue
+                hs.CAPIControlHandler(objCAPIControl)
+
+            End If
+        End Sub
+
+        Public Sub DimIfOnTo(ByRef DimValue As Double)
+            If IsOn() Then
+                DimTo(DimValue)
+            End If
+        End Sub
+
+
+        Public Overrides Function IsOn() As Boolean
+            Return Not GetDeviceValueAsString().Contains("Off")
+        End Function
     End Class
 
 
-    Public Class SBSceneController
+    Public Class SBDeviceSceneController
         Inherits SBDeviceBase
 
         Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer)
@@ -117,7 +212,7 @@ Public Class SBDevices
     ' Defines abstract methods:
     ' - isSecure()
     '
-    Public MustInherit Class SBSecurityDeviceBase
+    Public MustInherit Class SBDeviceSecurityBase
         Inherits SBDeviceBase
 
         Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByVal _DeviceType As SBDeviceType)
@@ -136,7 +231,7 @@ Public Class SBDevices
     ' - isSecure()
     '
     Public Class SBDeviceSecuritySensor
-        Inherits SBSecurityDeviceBase
+        Inherits SBDeviceSecurityBase
 
         Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer)
             MyBase.New(_hs, _Ref, SBDeviceType.SecuritySensor)
@@ -163,7 +258,7 @@ Public Class SBDevices
     ' Implements:
     '   
     Public MustInherit Class SBDeviceSecurityControl
-        Inherits SBSecurityDeviceBase
+        Inherits SBDeviceSecurityBase
 
         Protected CanSecureSensor As SBDeviceSecuritySensor
 

@@ -34,7 +34,7 @@ Public Class SBSecurity
 
         Dim Item
         For Each Item In Sensors
-            Dim dev As SBDevices.SBSecurityDeviceBase = Item.Value
+            Dim dev As SBDevices.SBDeviceSecurityBase = Item.Value
 
             If Not dev.IsSecure Then
                 Return False
@@ -53,7 +53,7 @@ Public Class SBSecurity
 
         Dim Item
         For Each Item In Controllers
-            Dim dev As SBDevices.SBSceneController = Item.Value
+            Dim dev As SBDevices.SBDeviceSceneController = Item.Value
             dev.SetSceneActive(IsSecure)
         Next
     End Sub

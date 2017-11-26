@@ -1,4 +1,5 @@
-﻿Public MustInherit Class SBSingleton
+﻿
+Public MustInherit Class SBSingleton
 
     Protected Shared House As SBHouse
 
@@ -32,3 +33,4 @@
 
 
 End Class
+

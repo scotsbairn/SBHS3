@@ -1,4 +1,5 @@
-﻿'
+﻿
+'
 ' dummy IHSApplication
 '
 
@@ -11,3 +12,4 @@ Public Class IHSApplication
         Throw New NotImplementedException()
     End Sub
 End Class
+
