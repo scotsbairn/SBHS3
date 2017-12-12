@@ -14,16 +14,19 @@ Public Class SkyView
         ' add the sensors and control devices etc
 
 
-        AddSecurityLock(57, 95)         ' Upper Door lock and Sensor
-        AddSecuritySensor(156)          ' Family Room Door
-        AddSecuritySensor(152)          ' Dining Room Door
-        AddSecuritySensor(123)          ' Main TV Room Door
+        AddSecurityLock(57, "Upper Lock", 95, "UpperDoor")         ' Upper Door lock and Sensor
+        AddSecuritySensor(156, "Family Patio")          ' Family Room Door
+        AddSecuritySensor(152, "Dining Patio")          ' Dining Room Door
+        AddSecuritySensor(123, "TV Patio")          ' Main TV Room Door
 
-        AddSecuritySensor(219)          ' Master Door
-        AddSecurityLock(24, 242)        ' Garage House Door
-        AddSecurityLock(34, 226)        ' Garage Pool Door
+        AddSecuritySensor(219, "Master Patio")          ' Master Door
+        AddSecurityLock(24, "Laundry Lock", 242, "Laundry Door")        ' Garage House Door
+        AddSecurityLock(34, "Pool Lock", 226, "Pool Door")        ' Garage Pool Door
 
-        AddSecurityBarrier(69)          ' Garage Door
+        AddSecurityBarrier(69, "Garage")          ' Garage Door
+
+        AddSecuritySensor(127, "Left Storage")
+        AddSecuritySensor(131, "Right Storage")
 
         AddSecuritySceneController(253) ' Family Button 5
         AddSecuritySceneController(267) ' Hall Button 5

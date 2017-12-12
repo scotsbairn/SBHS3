@@ -45,6 +45,48 @@ Public Class SBSecurity
     End Function
 
     ''' <summary>
+    ''' Create a String that describes if the hosue is secure or not
+    ''' </summary>
+    ''' <returns>Description of secure status</returns>
+    Function GetSecurityStatus() As String
+        Dim Sensors As Hashtable = House.GetSecuritySensors
+
+        Dim fDevName As String
+        Dim oDevNames As String
+
+        Dim Item
+        For Each Item In Sensors
+            Dim dev As SBDevices.SBDeviceSecurityBase = Item.Value
+
+            If Not dev.IsSecure Then
+                If IsNothing(fDevName) Then
+                    fDevName = dev.GetAliasName
+                ElseIf IsNothing(oDevNames) Then
+                    oDevNames = dev.GetAliasName
+                Else
+                    oDevNames &= "," & dev.GetAliasName
+                End If
+            End If
+        Next
+
+        Dim Status As String
+        If IsNothing(fDevName) Then
+            Status = "All secure"
+        Else
+            If IsNothing(oDevNames) Then
+                Status = "The following door or lock is not secured " & fDevName
+            Else
+                Status = "The following doors and locks are not secured, " & oDevNames & " and " & fDevName
+            End If
+        End If
+
+        hs.WriteLog(Me.GetType.Name, "GetSecurityStatus: " & Status)
+
+        Return Status
+
+    End Function
+
+    ''' <summary>
     ''' Update the scene controllers to reflect the current status of the house
     ''' </summary>
     Public Sub UpdateSecuritySceneControllers()

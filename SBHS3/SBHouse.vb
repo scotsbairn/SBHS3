@@ -23,37 +23,51 @@ Public MustInherit Class SBHouse
         SecuritySceneControllers.Add(Ref, sDev)
     End Sub
 
-    Protected Sub AddSecuritySensor(ByVal Ref As Integer)
+    Protected Sub AddSecuritySensor(ByVal Ref As Integer, ByVal AliasName As String)
         Dim sDev = New SBDevices.SBDeviceSecuritySensor(hs, Ref)
+        sDev.SetAliasName(AliasName)
+
         SecuritySensors.Add(Ref, sDev)
     End Sub
 
-    Protected Sub AddSecurityLock(ByVal Ref As Integer)
+    Protected Sub AddSecurityLock(ByVal Ref As Integer, ByVal AliasName As String)
         Dim cDev = New SBDevices.SBDeviceSecurityLock(hs, Ref, Nothing)
+        cDev.SetAliasName(AliasName)
+
         SecuritySensors.Add(Ref, cDev)
         SecurityControls.Add(Ref, cDev)
     End Sub
 
-    Protected Sub AddSecurityBarrier(ByVal Ref As Integer)
+    Protected Sub AddSecurityBarrier(ByVal Ref As Integer, ByVal AliasName As String)
         Dim cDev = New SBDevices.SBDeviceSecurityBarrier(hs, Ref, Nothing)
+        cDev.SetAliasName(AliasName)
+
         SecuritySensors.Add(Ref, cDev)
         SecurityControls.Add(Ref, cDev)
     End Sub
 
-    Protected Sub AddSecurityLock(ByVal Ref As Integer, ByVal SensorRef As Integer)
+    Protected Sub AddSecurityLock(ByVal Ref As Integer, ByVal AliasName As String, ByVal SensorRef As Integer, ByVal SensorAliasName As String)
         Dim sDev As SBDevices.SBDeviceSecuritySensor = New SBDevices.SBDeviceSecuritySensor(hs, SensorRef)
+        sDev.SetAliasName(SensorAliasName)
+
         SecuritySensors.Add(SensorRef, sDev)
 
         Dim cDev = New SBDevices.SBDeviceSecurityLock(hs, Ref, sDev)
+        cDev.SetAliasName(AliasName)
+
         SecuritySensors.Add(Ref, cDev)
         SecurityControls.Add(Ref, cDev)
     End Sub
 
-    Protected Sub AddSecurityBarrier(ByVal Ref As Integer, ByVal SensorRef As Integer)
+    Protected Sub AddSecurityBarrier(ByVal Ref As Integer, ByVal AliasName As String, ByVal SensorRef As Integer, ByVal SensorAliasName As String)
         Dim sDev As SBDevices.SBDeviceSecuritySensor = New SBDevices.SBDeviceSecuritySensor(hs, SensorRef)
+        sDev.SetAliasName(SensorAliasName)
+
         SecuritySensors.Add(SensorRef, sDev)
 
         Dim cDev = New SBDevices.SBDeviceSecurityBarrier(hs, Ref, sDev)
+        cDev.SetAliasName(AliasName)
+
         SecuritySensors.Add(Ref, cDev)
         SecurityControls.Add(Ref, cDev)
     End Sub

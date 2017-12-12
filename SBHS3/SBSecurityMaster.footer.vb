@@ -28,6 +28,13 @@ Sub UpdateSecuritySceneControllers(ByVal Parm As Object)
 End Sub
 
 
+Function GetSecurityStatus(ByVal Parm As Object) As String
+    SkyviewSingleton.Init(hs)
+    Dim Security As SBSecurity = SBSingleton.GetSecurity()
+
+    Return Security.GetSecurityStatus()
+End Function
+
 Sub StatusChangeCB(ByVal Parm As Object())
     SkyviewSingleton.Init(hs)
 

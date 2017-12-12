@@ -26,6 +26,9 @@ Public Class SBDevices
         ' device type
         Protected DeviceType As SBDeviceType
 
+        ' alias used to describe the device
+        Protected AliasName As String
+
         Public Sub New(ByRef _hs As IHSApplication, ByVal _Ref As Integer, ByVal _DeviceType As SBDeviceType)
             hs = _hs
             Ref = _Ref
@@ -83,6 +86,18 @@ Public Class SBDevices
 #Else
             Return "0"
 #End If
+        End Function
+
+        Public Sub SetAliasName(ByVal _AliasName As String)
+            AliasName = _AliasName
+        End Sub
+
+        Public Function GetAliasName() As String
+            If IsNothing(AliasName) Then
+                Return GetName()
+            Else
+                Return AliasName
+            End If
         End Function
 
         Public Sub SetDeviceValue(ByRef Value As String)
